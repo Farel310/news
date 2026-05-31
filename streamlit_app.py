@@ -14,7 +14,7 @@ RSS_FEEDS = {
 }
 
 refresh = st.slider("Refresh tiap detik:", 10, 120, 30)
-keyword = st.text_input("Filter keyword:", "Fed,NFP,CPI,war,oil,Gold,DXY")
+keyword = st.text_input("Filter keyword:",)
 
 if 'last_titles' not in st.session_state:
     st.session_state.last_titles = set()
