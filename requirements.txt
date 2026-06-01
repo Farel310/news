@@ -1,2 +1,6 @@
 streamlit
 feedparser
+streamlit
+feedparser
+yfinance
+plotly
