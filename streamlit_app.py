@@ -9,7 +9,7 @@ st.title("📈 TERMINAL TRADING LEVEL 1")
 # List pair
 pairs = {
     "BTC-USD": "Bitcoin",
-    "ETH-USD": "Ethereum", 
+    "ETH-USD": "Ethereum",
     "XAUUSD=X": "Gold",
     "EURUSD=X": "EUR/USD",
     "USDJPY=X": "USD/JPY",
@@ -21,7 +21,7 @@ col1, col2 = st.columns([1,3])
 with col1:
     pair_label = st.selectbox("Pilih Pair:", list(pairs.keys()), format_func=lambda x: pairs[x])
     pair = pair_label
-    
+
     timeframe = st.selectbox("Timeframe:", ["1m", "5m", "15m", "1h", "1d"])
     period = st.selectbox("Period:", ["1d", "5d", "1mo", "3mo", "6mo", "1y"])
 
@@ -30,11 +30,11 @@ df = yf.download(pair, period=period, interval=timeframe)
 
 with col1:
     if not df.empty:
-        # Ambil harga terakhir dari df, JANGAN pake ticker.info
-        price = df['Close'].iloc[-1]
-        st.metric(pairs, f"${price:,.2f}")
+        # Ambil harga terakhir dari df
+        price = float(df['Close'].iloc[-1])
+        st.metric(pair_label, f"${price:,.2f}") # <- UDAH DIGANTI pair_label
     else:
-        st.metric(pairs, "Data Kosong")
+        st.metric(pair_label, "Data Kosong") # <- UDAH DIGANTI pair_label
 
 # Grafik candlestick
 with col2:
@@ -42,12 +42,12 @@ with col2:
         fig = go.Figure(data=[go.Candlestick(
             x=df.index,
             open=df['Open'],
-            high=df['High'], 
+            high=df['High'],
             low=df['Low'],
             close=df['Close']
         )])
         fig.update_layout(
-            title=f"Grafik {pairs} - {timeframe}",
+            title=f"Grafik {pairs[pair]} - {timeframe}", # <- ini juga gua benerin
             xaxis_title="Waktu",
             yaxis_title="Harga USD",
             xaxis_rangeslider_visible=False,
