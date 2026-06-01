@@ -19,9 +19,9 @@ pairs = {
 col1, col2 = st.columns([1,3])
 
 with col1:
-    pair = st.selectbox("Pilih Pair:", list(pairs.keys()), format_func=lambda x: pairs[x])
+list(pairs.keys()), format_func=lambda x: pairs[x])
     timeframe = st.selectbox("Timeframe:", ["1m", "5m", "15m", "1h", "4h", "1d"], index=2)
-    period = st.selectbox("Period:", ["1d", "5d", "1mo", "3mo"], index=2)
+    period = st.selectbox("Period:", ["1d", "5d", "1mo", "3mo"], index=2     
 
     # Harga real-time
     ticker = yf.Ticker(pair)
