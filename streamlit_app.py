@@ -6,7 +6,7 @@ from datetime import datetime
 st.set_page_config(page_title="Terminal Trading", layout="wide")
 st.title("📈 TERMINAL TRADING LEVEL 1")
 
-# Sidebar pair
+# List pair
 pairs = {
     "BTC-USD": "Bitcoin",
     "ETH-USD": "Ethereum", 
@@ -25,16 +25,18 @@ with col1:
     timeframe = st.selectbox("Timeframe:", ["1m", "5m", "15m", "1h", "1d"])
     period = st.selectbox("Period:", ["1d", "5d", "1mo", "3mo", "6mo", "1y"])
 
-# Harga real-time
-ticker = yf.Ticker(pair)
-price = ticker.info.get('regularMarketPrice', 0)
-
-with col1:
-    st.metric(pairs[pair], f"${price:,.2f}")
-
-# Ambil data + grafik candlestick
+# Ambil data dulu
 df = yf.download(pair, period=period, interval=timeframe)
 
+with col1:
+    if not df.empty:
+        # Ambil harga terakhir dari df, JANGAN pake ticker.info
+        price = df['Close'].iloc[-1]
+        st.metric(pairs, f"${price:,.2f}")
+    else:
+        st.metric(pairs, "Data Kosong")
+
+# Grafik candlestick
 with col2:
     if not df.empty:
         fig = go.Figure(data=[go.Candlestick(
@@ -45,13 +47,14 @@ with col2:
             close=df['Close']
         )])
         fig.update_layout(
-            title=f"Grafik {pairs[pair]} - {timeframe}",
+            title=f"Grafik {pairs} - {timeframe}",
             xaxis_title="Waktu",
             yaxis_title="Harga USD",
-            xaxis_rangeslider_visible=False
+            xaxis_rangeslider_visible=False,
+            height=600
         )
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.warning("Data ga ada. Coba ganti timeframe/period.")
+        st.warning("⚠️ Data ga ada. Coba ganti timeframe jadi 1h/1d atau period jadi 1mo")
 
 st.caption(f"Update terakhir: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
